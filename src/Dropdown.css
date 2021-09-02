@@ -1,0 +1,109 @@
+.dropdowncomponent {
+    width: 500px;
+    display: inline-block;
+    color: #909090;
+    position: relative;
+    margin: 10px;
+  }
+  .heading {
+    text-align: left;
+    position: relative;
+    border: solid 2px #e2e2e2;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  .heading::after {
+    background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/551749-200.png);
+    background-size: cover;
+    content: "";
+    width: 15px;
+    display: inline-block;
+    height: 15px;
+    position: absolute;
+    right: 5px;
+    bottom: 6px;
+  }
+
+  .dropdowncomponent ul {
+    list-style: none;
+    padding: 0px;
+  }
+  
+  .dropdowncomponent ul.mainUl {
+    padding: 5px 0px;
+    margin: 5px 0px;
+    background-color: #fff;
+    list-style: none;
+    border: solid 2px #e2e2e2;
+    border-radius: 3px;
+    position: absolute;
+    box-sizing: border-box;
+    width: 500px;
+  }
+  
+  .dropdowncomponent ul li.list-item {
+    padding: 5px;
+  }
+  .dropdowncomponent ul li.list-item:hover , .dropdowncomponent ul li label:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+  }
+  .active {
+    background-color: #f7f7f7;
+  }
+
+
+  .ellipse {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 21px;
+  }  
+  .dropdowncomponent ul li label {
+    display: block;
+    padding: 0px;
+  }
+  .dropdowncomponent li.select-all {
+    border-bottom: solid 1px #edebeb;
+    padding: 50px
+  }
+ 
+  .styled-checkbox:checked + label:before {
+    background: rgb(255, 81, 0);
+    
+}
+.styled-checkbox + label {
+  position: relative;
+    cursor: pointer;
+    padding: 0;
+}
+.styled-checkbox:checked + label:after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 9px;
+  background: white;
+  width: 2px;
+  height: 2px;
+  box-shadow: 2px 0 0 white, 4px 0 0 white, 4px -2px 0 white, 4px -4px 0 white, 4px -6px 0 white, 4px -8px 0 white;
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  box-sizing: border-box;
+}
+
+.styled-checkbox {
+  position: absolute;
+  opacity: 0;
+}
+
+
+.styled-checkbox + label:before {  
+  content: '';
+  margin-right: 10px;
+  display: inline-block;
+  vertical-align: text-top;
+  width: 15px;
+  height: 15px;
+  background: white;
+  border: solid #e2e2e2 2px;
+}
