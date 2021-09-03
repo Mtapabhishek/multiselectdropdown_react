@@ -8,68 +8,79 @@ class Dropdown extends Component {
             items: props.items,
             selectedItems: [],
             isOpen: false,
-            selectAllListItem: {
-                name: 'Select All Office',
-                id: -1,
-                value: 'select all office',
-                selected: false
-            }
+
+            selectAllListItem: this.props
         }
 
-        this.onSingleSelectListItem = this.onSingleSelectListItem.bind(this);
-        this.onMultiSelectListItem = this.onMultiSelectListItem.bind(this);
-        this.toggleDropdown = this.toggleDropdown.bind(this);
-        this.showSelectedItemString = this.showSelectedItemString.bind(this);
-        this.onSelectAll = this.onSelectAll.bind(this);
-        this.renderMuliSelect = this.renderMuliSelect.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.dropdownNode = React.createRef();
     }
-    
+
+    shouldComponentUpdate(nextProps) {
+        if (this.props.items === nextProps.items) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    componentWillMount() {
+
+        document.addEventListener('mousedown', this.handleClickOutside)
+    }
+
+
+
+
+
+
+    handleClickOutside(evt) {
+        console.log(this.dropdownNode);
+        const dropdowncontainer = this.dropdownNode.current;
+        if (!dropdowncontainer) {
+            return;
+        }
+        const { target } = evt;
+        if (target !== dropdowncontainer && !dropdowncontainer.contains(target)) {
+            this.setState({
+                isOpen: false
+            });
+        }
+    }
 
     eachCheckBoxLi(item, index) {
         return (
-            <li key={index} id={'item-' + item.id} className="list-item" >
+            <li id={'item-' + item.id} className="list-item" >
                 <input className="styled-checkbox" onChange={this.onMultiSelectListItem.bind(this, item)} type="checkbox" id={'t-' + item.id} checked={item.selected} />
                 <label id="lbl" htmlFor={'t-' + item.id} >
-                {item.name}
+                    {item.name}
                 </label>
             </li>
         )
     }
-    toggleDropdown(e) {
-        if (e) {
-            e.stopPropagation();
-        }
-        this.setState((prevState) => ({
-            isOpen: !prevState.isOpen
-        }))
+    toggleDropdown = (e) => {
+        this.setState({ isOpen: !this.state.isOpen })
     }
-    onMultiSelectListItem(item, e) {
+    onMultiSelectListItem = (item, e) => {
+
         this.setState(prev => ({
-            items: prev.items.map(prevItem => prevItem.id === item.id ? { ...prevItem , selected: !prevItem.selected } : prevItem)
+            items: prev.items.map(prevItem => prevItem.id === item.id ? { ...prevItem, selected: !prevItem.selected } : prevItem)
         }), () => {
             const mySelectedItems = this.state.items.filter(i => i.selected);
             this.setState({
                 selectedItems: mySelectedItems
-            })
-        })
-        this.setState(prevState => ({
-            selectAllListItem: { ...prevState.selectAllListItem, selected: false }
-        }))
-    }
-    onSingleSelectListItem(item, e) {
-        this.setState(prevState => ({
-            items: prevState.items.map(i => {
-                if (i.id === item.id) {
-                    i.selected = true;
-                } else {
-                    i.selected = false;
+            }, () => {
+                if (this.state.selectedItems.length === this.state.items.length) {
+                    this.onSelectAll()
                 }
-                return i;
             })
-        }))
+
+        })
+
     }
-    onSelectAll(e) {
-        const isChecked = e.target.checked;
+
+    onSelectAll = (e, allselected) => {
+        const isChecked = (e && e.target && e.target.checked) || allselected;
         this.setState((prevState) => {
             return {
                 items: prevState.items.map(item => {
@@ -81,14 +92,16 @@ class Dropdown extends Component {
             const mySelectedItems = this.state.items.filter(i => i.selected);
             this.setState({
                 selectedItems: mySelectedItems
+            }, () => {
+                this.setState(prevState => ({
+                    selectAllListItem: { ...prevState.selectAllListItem, selected: !prevState.selectAllListItem.selected }
+                }))
             })
         })
-        this.setState(prevState => ({
-            selectAllListItem: { ...prevState.selectAllListItem , selected: !prevState.selectAllListItem.selected }
-        }))
-        
+
+
     }
-    showSelectedItemString() {
+    showSelectedItemString = () => {
         var str = '';
         if (this.state.selectedItems.length) {
             if (this.state.selectedItems.length === 1) {
@@ -96,7 +109,7 @@ class Dropdown extends Component {
             } else {
                 const len = this.state.selectedItems.length;
                 this.state.selectedItems.forEach((item, index) => {
-                    if (index === len-1) {
+                    if (index === len - 1) {
                         str += item.name;
                     } else {
                         str += item.name + ', ';
@@ -104,36 +117,35 @@ class Dropdown extends Component {
                 });
             }
         }
-        return str || this.props.placeholder;
+        return str || `Options ${this.props.placeholder}`;
     }
-    renderMuliSelect() {
+    renderMuliSelect = () => {
         return (
             <ul className="mainUl">
                 {
                     <li className="select-all list-item" >
                         <input onChange={this.onSelectAll} type="checkbox" className="styled-checkbox" id={'select-all'} checked={this.state.selectAllListItem.selected} />
-                        <label  htmlFor={'select-all'}>
+                        <label htmlFor={'select-all'}>
                             {this.state.selectAllListItem.selected ? 'Unselect All Office' :
                                 this.state.selectAllListItem.name}
                         </label>
                     </li>}
-                    {this.state.items.map(this.eachCheckBoxLi)}
+                {this.state.items.map(this.eachCheckBoxLi)}
             </ul>
         )
     }
-    renderDisplay() {
-       
-            return this.renderMuliSelect()
-      
-    }
-    render() {
+
+    render = () => {
+        console.log("render")
         return (
-            <div className="dropdowncomponent" >
+            <div className="dropdowncomponent" ref={this.dropdownNode} >
                 <div className="heading ellipse" onClick={this.toggleDropdown}>{this.showSelectedItemString()}</div>
-                {this.state.isOpen && this.renderDisplay()}
+                {this.state.isOpen && this.renderMuliSelect()}
             </div>
         )
+
     }
+
 }
 
 export default Dropdown;

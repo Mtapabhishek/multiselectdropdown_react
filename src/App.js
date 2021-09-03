@@ -9,6 +9,12 @@ class App extends Component {
         this.state = {
             data: [
                 {
+                    name: 'Select All',
+                    id: -1,
+                    value: 'select all',
+                    selected: false
+                },
+                {
                     id: 1,
                     name: "Office Bengaluru 1",
                     value: "office1",
@@ -40,7 +46,7 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <Dropdown placeholder={'Select Options'} items={this.state.data}/> 
+                <Dropdown placeholder="" items={this.state.data}/> 
             </div>
         )
     }
